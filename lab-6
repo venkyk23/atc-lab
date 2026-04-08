@@ -1,0 +1,39 @@
+#include <stdio.h>
+#include <string.h>
+
+int main() {
+    char grammar[200];
+    int i, ambiguous = 0;
+
+    printf("Enter production (e.g., E->E+E|E*E|id):\n");
+    scanf("%s", grammar);
+
+    // Check for multiple productions using '|'
+    int alternatives = 0;
+    for (i = 0; grammar[i] != '\0'; i++) {
+        if (grammar[i] == '|')
+            alternatives++;
+    }
+
+    // Simple ambiguity check:
+    // If more than one alternative and same non-terminal repeats
+    if (alternatives > 0) {
+        for (i = 0; grammar[i] != '\0'; i++) {
+            if (grammar[i] == grammar[0] && grammar[i+1] == '-' && grammar[i+2] == '>') {
+                ambiguous = 1;
+                break;
+            }
+        }
+    }
+
+    // Another simple rule: repeated patterns like E+E and E*E
+    if (strstr(grammar, "E+E") && strstr(grammar, "E*E"))
+        ambiguous = 1;
+
+    if (ambiguous)
+        printf("Grammar is Ambiguous\n");
+    else
+        printf("Grammar is Not Ambiguous\n");
+
+    return 0;
+}
