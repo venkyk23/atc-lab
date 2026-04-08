@@ -1,0 +1,28 @@
+#include <stdio.h>
+#include <string.h>
+
+int main() {
+    char expr[50];
+    int i;
+
+    printf("Enter expression (e.g., a+b):\n");
+    scanf("%s", expr);
+
+    printf("\nGenerated Assembly:\n");
+
+    for (i = 0; expr[i] != '\0'; i++) {
+        if (expr[i] == '+') {
+            printf("ADD\n");
+        } else if (expr[i] == '-') {
+            printf("SUB\n");
+        } else if (expr[i] == '*') {
+            printf("MUL\n");
+        } else if (expr[i] == '/') {
+            printf("DIV\n");
+        } else {
+            printf("MOV %c\n", expr[i]);
+        }
+    }
+
+    return 0;
+}
