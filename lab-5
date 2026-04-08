@@ -1,0 +1,68 @@
+#include <stdio.h>
+#include <ctype.h>
+
+char expr[100];
+int i = 0;
+
+// Function declarations
+int parseE(); // Expression
+int parseT(); // Term
+int parseF(); // Factor
+
+// Expression: E -> T {( + | - ) T}
+int parseE() {
+    int value = parseT();
+    while (expr[i] == '+' || expr[i] == '-') {
+        char op = expr[i++];
+        int value2 = parseT();
+        if (op == '+')
+            value += value2;
+        else
+            value -= value2;
+    }
+    return value;
+}
+
+// Term: T -> F {( * | / ) F}
+int parseT() {
+    int value = parseF();
+    while (expr[i] == '*' || expr[i] == '/') {
+        char op = expr[i++];
+        int value2 = parseF();
+        if (op == '*')
+            value *= value2;
+        else
+            value /= value2;
+    }
+    return value;
+}
+
+// Factor: F -> (E) | number
+int parseF() {
+    int value = 0;
+
+    if (expr[i] == '(') {
+        i++; // skip '('
+        value = parseE();
+        i++; // skip ')'
+    } else {
+        while (isdigit(expr[i])) {
+            value = value * 10 + (expr[i++] - '0');
+        }
+    }
+    return value;
+}
+
+int main() {
+    printf("Enter arithmetic expression:\n");
+    scanf("%s", expr);
+
+    int result = parseE();
+
+    printf("Result = %d\n", result);
+    return 0;
+}
+
+
+
+
