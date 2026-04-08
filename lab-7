@@ -1,0 +1,90 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <ctype.h>
+
+// AST Node
+typedef struct node {
+    char value;
+    struct node *left, *right;
+} Node;
+
+char expr[100];
+int i = 0;
+
+// Create new node
+Node* newNode(char val) {
+    Node* temp = (Node*)malloc(sizeof(Node));
+    temp->value = val;
+    temp->left = temp->right = NULL;
+    return temp;
+}
+
+// Forward declarations
+Node* parseE();
+Node* parseT();
+Node* parseF();
+
+// Expression: E -> T {( + | - ) T}
+Node* parseE() {
+    Node* left = parseT();
+
+    while (expr[i] == '+' || expr[i] == '-') {
+        char op = expr[i++];
+        Node* right = parseT();
+        Node* new = newNode(op);
+        new->left = left;
+        new->right = right;
+        left = new;
+    }
+    return left;
+}
+
+// Term: T -> F {( * | / ) F}
+Node* parseT() {
+    Node* left = parseF();
+
+    while (expr[i] == '*' || expr[i] == '/') {
+        char op = expr[i++];
+        Node* right = parseF();
+        Node* new = newNode(op);
+        new->left = left;
+        new->right = right;
+        left = new;
+    }
+    return left;
+}
+
+// Factor: F -> (E) | id (single digit)
+Node* parseF() {
+    Node* node;
+
+    if (expr[i] == '(') {
+        i++;
+        node = parseE();
+        i++; // skip ')'
+    } else {
+        node = newNode(expr[i++]); // operand
+    }
+    return node;
+}
+
+// Inorder traversal
+void inorder(Node* root) {
+    if (root != NULL) {
+        inorder(root->left);
+        printf("%c ", root->value);
+        inorder(root->right);
+    }
+}
+
+int main() {
+    printf("Enter expression:\n");
+    scanf("%s", expr);
+
+    Node* root = parseE();
+
+    printf("Inorder Traversal of AST:\n");
+    inorder(root);
+
+    return 0;
+}
