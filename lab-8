@@ -1,0 +1,18 @@
+#include <stdio.h>
+#include <string.h>
+
+int main() {
+    char str[200];
+
+    printf("Enter control statement:\n");
+    fgets(str, sizeof(str), stdin);
+
+    if (strstr(str, "if(") && strstr(str, "{") && strstr(str, "}"))
+        printf("Valid IF statement\n");
+    else if (strstr(str, "while(") && strstr(str, "{") && strstr(str, "}"))
+        printf("Valid WHILE statement\n");
+    else
+        printf("Invalid statement\n");
+
+    return 0;
+}
